@@ -1,13 +1,18 @@
 import pandas as pd
+import warnings
+warnings.filterwarnings('ignore')
+import re
+import sys
 import datetime
+from tabulate import tabulate
+import IPython.display as display
 import numpy as np
-
 
 dates = []
 def dataframe():
     JH_DATA_URL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/'
     df_main = pd.DataFrame(columns = ['Province/State', 'Country/Region', 'date',
-                                'Lat' , 'Long', 'Confirmed'])
+                                'Lat' , 'Long', 'Confirmed', 'Deaths', 'Recovered'])
     
     
     today = pd.Timestamp('today')
@@ -34,7 +39,7 @@ def dataframe():
                 df = df[df['Country/Region'] == 'US']
                 df['date'] = date
                 df = df.filter(['Province/State', 'Country/Region', 'date',
-                                'Lat' , 'Long', 'Confirmed'])
+                                'Lat' , 'Long', 'Confirmed', 'Deaths', 'Recovered'])
                 
             except:
                 pass
@@ -44,10 +49,10 @@ def dataframe():
                 df = df[df['Country_Region'] == 'US']
                 df['date'] = date
                 df = df.filter(['Province_State', 'Country_Region', 'date', 
-                                'Lat' , 'Long_', 'Confirmed'])
+                                'Lat' , 'Long_', 'Confirmed', 'Deaths', 'Recovered'])
                 
                 df.columns = ['Province/State', 'Country/Region', 'date',
-                                'Lat' , 'Long', 'Confirmed']
+                                'Lat' , 'Long', 'Confirmed', 'Deaths', 'Recovered']
             except:
                 pass
             
@@ -63,7 +68,8 @@ def dataframe():
     except:
         pass
 
-    df_sums = df_main.groupby(['Province/State','date'])['Confirmed'].sum().reset_index()
+    df_main['Confirmed active'] = df_main['Confirmed'] - (df_main['Recovered'] + df_main['Deaths'])
+    df_sums = df_main.groupby(['Province/State','date'])['Confirmed active'].sum().reset_index()
     
     return df_sums, df_main, dates
     
@@ -100,7 +106,7 @@ for ps in provstates:
     
     ps_ls = [ps, 'US', lat, long]
     cases = df_sums[df_sums['Province/State'].str.contains(ps)]
-    st_cases = cases['Confirmed'].tolist()
+    st_cases = cases['Confirmed active'].tolist()
     st_dates = cases['date'].tolist()
     
     c = []
