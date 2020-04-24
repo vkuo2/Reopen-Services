@@ -686,7 +686,7 @@ def generate_model_forecast_plot(loc,  model, reset):
             DATES = yi[4:j]
             obs_y_trunc = df_sub.iloc[0,4:j].values
             
-            
+        
         ii = 0
         while obs_y_trunc[ii] == 0: ii+=1
         y = obs_y_trunc[ii:]
@@ -778,7 +778,7 @@ def generate_model_forecast_plot(loc,  model, reset):
         dates = sub_df['pred_dates'].iloc[0]
         clr = sub_df['pred_clr'].iloc[0]
         obs_y = sub_df['obs_y'].iloc[0]
-        if i == 0:
+        if label == 'Current forecast':
             fig_data.append(
                 go.Scatter(
                     x=dates,
