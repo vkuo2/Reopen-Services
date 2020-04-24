@@ -81,7 +81,7 @@ locs_df = locs_df[locs_df['Province/State'] != 'Northern Mariana Islands']
 locs_df.drop(columns=['Unnamed: 0'], inplace=True)
 
 locations = list(set(locs_df['Province/State']))
-
+locations.sort()
 
 models = ['Logistic', 'Gaussian', 'SEIR-SD', '3rd degree polynomial', 'Quadratic', 'Exponential']
 day_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 
