@@ -328,7 +328,7 @@ def generate_control_card1():
             html.Br(),
             html.Div(
                 id="reset-btn-outer1",
-                children=html.Button(id="reset-btn1", children="Reset", n_clicks=0),
+                children=html.Button(id="reset-btn1", children="Reset Plots", n_clicks=0),
             ),
         ],
     )
@@ -613,7 +613,7 @@ def generate_control_card2():
             html.Br(),
             html.Div(
                 id="reset-btn-outer2",
-                children=html.Button(id="reset-btn2", children="Reset", n_clicks=0),
+                children=html.Button(id="reset-btn2", children="Reset Plots", n_clicks=0),
             ),
         ],
     )
@@ -1026,7 +1026,7 @@ def generate_rate_change_plot(loc,  model, reset):
                 obs_delta_y.append(dif)
         
         
-        if i == 0:
+        if label == 'Current forecast':
             fig_data.append(
                 go.Scatter(
                     x=dates[1:],
