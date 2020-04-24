@@ -362,6 +362,19 @@ def generate_control_card2():
                 options=[{"label": i, "value": i} for i in models],
                 value='SEIR-SD',
             ),
+            
+            html.Br(),
+            html.P("Select services"),
+            dcc.Checklist(
+                id="select services2",
+                options=[
+                    {'label': 'Elective surgeries', 'value': 'el'},
+                    {'label': 'Ambulatory', 'value': 'amb'},
+                    {'label': 'Wellness exam', 'value': 'wel'}
+                    ],
+                value=['el', 'amb', 'wel']
+            ),
+            
             html.Br(),
             html.P("ICU beds in-house"),
             dcc.Slider(
