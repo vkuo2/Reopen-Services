@@ -158,172 +158,68 @@ def generate_control_card1():
             ),
             html.Br(),
             html.P("% of cases visiting your hospital"),
-            dcc.Slider(
+            dcc.Input(
                 id="visits1",
                 min=0,
                 max=100,
-                step=1,
-                value=10,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
+                type='number',
+                value=10
             ),    
             html.Br(),
             html.P("% of visits resulting in admission"),
-            dcc.Slider(
+            dcc.Input(
                 id="admits1",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
+                type='number',
+                value=10
                 
             ),   
             html.Br(),
             html.P("% of admits going to ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="percent ICU1",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
+                type='number',
+                value=10
                 
             ),   
             html.Br(),
             html.P("% of ICU on ventilator"),
-            dcc.Slider(
+            dcc.Input(
                 id="on vent1",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
-                
+                type='number',
+                value=10
             ),   
             html.Br(),
             html.P("Avg LOS for non-ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="non-ICU LOS1",
                 min=1,
                 max=14,
-                value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
+                 type='number',
+                value=4                
             ),   
             html.Br(),
             html.P("Avg LOS for ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="ICU LOS1",
                 min=1,
                 max=14,
-                value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
+                type='number',
+                value=4
             ),
             html.Br(),
             html.P("Avg time lag in patient visits"),
-            dcc.Slider(
+            dcc.Input(
                 id="time lag1",
                 min=1,
                 max=14,
+                type='number',
                 value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
             ),   
             html.Br(),
             html.Div(
@@ -377,238 +273,93 @@ def generate_control_card2():
             
             html.Br(),
             html.P("ICU beds in-house"),
-            dcc.Slider(
+            dcc.Input(
                 id="ICU beds2",
                 min=0,
                 max=500,
-                step=1,
-                value=300,
-                marks={
-                    0: '0',
-                    50: '50',
-                    100: '100',
-                    150: '150',
-                    200: '200',
-                    250: '250',
-                    300: '300',
-                    350: '350',
-                    400: '400',
-                    450: '450',
-                    500: '500'
-                    },
+                type='number',
+                value=300
             ),  
             html.Br(),
             html.P("non-ICU beds in-house"),
-            dcc.Slider(
+            dcc.Input(
                 id="nonICU beds2",
                 min=0,
                 max=500,
-                step=1,
-                value=300,
-                marks={
-                    0: '0',
-                    50: '50',
-                    100: '100',
-                    150: '150',
-                    200: '200',
-                    250: '250',
-                    300: '300',
-                    350: '350',
-                    400: '400',
-                    450: '450',
-                    500: '500'
-                    },
+                type='number',
+                value=300
             ),
             html.Br(),
             html.P("Ventilators in-house"),
-            dcc.Slider(
+            dcc.Input(
                 id="vents in house2",
                 min=0,
                 max=500,
-                step=1,
-                value=100,
-                marks={
-                    0: '0',
-                    50: '50',
-                    100: '100',
-                    150: '150',
-                    200: '200',
-                    250: '250',
-                    300: '300',
-                    350: '350',
-                    400: '400',
-                    450: '450',
-                    500: '500'
-                    },
+                type='number',
+                value=100
             ),  
             html.Br(),
             html.P("% of cases visiting your hospital"),
-            dcc.Slider(
+            dcc.Input(
                 id="visits2",
                 min=0,
                 max=100,
-                step=1,
-                value=10,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
+                type='number',
+                value=10
             ),
             html.Br(),
             html.P("% of visits resulting in admission"),
-            dcc.Slider(
+            dcc.Input(
                 id="admits2",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
-                
+                type='number',
+                value=20
             ),   
             html.Br(),
             html.P("% of admits going to ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="percent ICU2",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
-                
+                type='number',
+                value=20
             ),   
             html.Br(),
             html.P("% of ICU on ventilator"),
-            dcc.Slider(
+            dcc.Input(
                 id="on vent2",
                 min=0,
                 max=100,
-                value=20,
-                step=1,
-                marks={
-                    0: '0',
-                    10: '10',
-                    20: '20',
-                    30: '30',
-                    40: '40',
-                    50: '50',
-                    60: '60',
-                    70: '70',
-                    80: '80',
-                    90: '90',
-                    100: '100%'
-                    },
-                
+                type='number',
+                value=20
             ),   
             html.Br(),
             html.P("Avg LOS for non-ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="non-ICU LOS2",
                 min=1,
                 max=14,
-                value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
+                type='number',
+                value=4
             ),   
             html.Br(),
             html.P("Avg LOS for ICU"),
-            dcc.Slider(
+            dcc.Input(
                 id="ICU LOS2",
                 min=1,
                 max=14,
-                value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
+                type='number',
+                value=4
             ),
             html.Br(),
             html.P("Avg time lag in patient visits"),
-            dcc.Slider(
+            dcc.Input(
                 id="time lag2",
                 min=1,
                 max=14,
-                value=4,
-                step=1,
-                marks={
-                    1: '1',
-                    2: '2',
-                    3: '3',
-                    4: '4',
-                    5: '5',
-                    6: '6',
-                    7: '7',
-                    8: '8',
-                    9: '9',
-                    10: '10',
-                    11: '11',
-                    12: '12',
-                    13: '13 days'
-                    
-                    },
-                
+                type='number',
+                value=4
             ),   
             html.Br(),
             html.Div(
@@ -835,7 +586,7 @@ def generate_model_forecast_plot(loc,  model, reset):
             
             yaxis=dict(
                 title=dict(
-                    text="<b>COVID-19 cases</b>",
+                    text="<b>Estimated active cases</b>",
                     font=dict(
                         family='"Open Sans", "HelveticaNeue", "Helvetica Neue",'
                         " Helvetica, Arial, sans-serif",
@@ -1110,7 +861,7 @@ def generate_rate_change_plot(loc,  model, reset):
             
             yaxis=dict(
                 title=dict(
-                    text="<b>&#916; COVID-19 cases</b>",
+                    text="<b>&#916; Estimated active cases</b>",
                     font=dict(
                         family='"Open Sans", "HelveticaNeue", "Helvetica Neue",'
                         " Helvetica, Arial, sans-serif",
