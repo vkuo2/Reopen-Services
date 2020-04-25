@@ -22,11 +22,16 @@ import flask
 import io
 import sys 
 
+
+
+df_for_download = pd.DataFrame()
+    
+
+
 #from io import StringIO
 #import base64 # functionality for encoding binary data to ASCII characters and decoding back to binary data
 #from IPython.display import HTML, display
 
-#global df_for_download
 
 col_names =  ['obs_y', 'pred_y', 'forecasted_y', 'pred_dates', 'forecast_dates', 'label', 'obs_pred_r2', 'model', 
               'focal_loc', 'PopSize', 'ArrivalDate', 'pred_clr', 'fore_clr']
@@ -143,7 +148,8 @@ def generate_control_card1():
                 options=[{"label": i, "value": i} for i in locations],
                 value='Illinois',
                 style={
-                    #'height': '2px', 
+                    #'height': '2px',
+                    #'display': 'flex',
                     'width': '250px', 
                     'font-size': "100%",
                     #'min-height': '1px',
@@ -264,11 +270,11 @@ def generate_control_card2():
             dcc.Checklist(
                 id="select services2",
                 options=[
-                    {'label': 'Elective surgeries', 'value': 'el'},
-                    {'label': 'Ambulatory', 'value': 'amb'},
-                    {'label': 'Wellness exam', 'value': 'wel'}
+                    {'label': 'Emergent cases', 'value': 'emergent'},
+                    {'label': 'Urgent cases', 'value': 'urgent'},
+                    {'label': 'Elective cases', 'value': 'elective'}
                     ],
-                value=['el', 'amb', 'wel']
+                value=['emergent', 'urgent', 'elective']
             ),
             
             html.Br(),
@@ -373,16 +379,6 @@ def generate_control_card2():
 
 
 
-def generate_table(dataframe, max_rows=10):
-    return html.Table(
-        # Header
-        [html.Tr([html.Th(col) for col in dataframe.columns])] +
-        # Body
-        [html.Tr([
-            html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-        ]) for i in range(min(len(dataframe), max_rows))]
-    )
-
 
 
 def generate_model_forecast_plot(loc,  model, reset):
@@ -394,7 +390,7 @@ def generate_model_forecast_plot(loc,  model, reset):
     col_names =  ['obs_y', 'pred_y', 'forecasted_y', 'pred_dates', 'forecast_dates', 'label', 'obs_pred_r2', 'model', 
                       'focal_loc', 'PopSize', 'ArrivalDate', 'pred_clr', 'fore_clr']
         
-    fits_df  = pd.DataFrame(columns = col_names)
+    generate_model_forecast_plot.fits_df  = pd.DataFrame(columns = col_names)
 
     PopSize = statepops[statepops['Province/State'] == loc]['PopSize'].tolist()
     PopSize = PopSize[0]
@@ -511,20 +507,20 @@ def generate_model_forecast_plot(loc,  model, reset):
         dates = dates.strftime('%m/%d')
             
             
-        output_list = [y, pred_y, forecasted_y, dates, fdates,
+        output_list = [y.tolist(), pred_y.tolist(), forecasted_y.tolist(), dates, fdates,
                        label, obs_pred_r2, model, loc, PopSize, 
                        ArrivalDate, pred_clr, fore_clr]
             
-        fits_df.loc[len(fits_df)] = output_list
+        generate_model_forecast_plot.fits_df.loc[len(generate_model_forecast_plot.fits_df)] = output_list
         
     
-    labels = fits_df['label'].tolist()
+    labels = generate_model_forecast_plot.fits_df['label'].tolist()
         
     fig_data = []
     
     for i, label in enumerate(labels):
             
-        sub_df = fits_df[fits_df['label'] == label]
+        sub_df = generate_model_forecast_plot.fits_df[generate_model_forecast_plot.fits_df['label'] == label]
         
         dates = sub_df['pred_dates'].iloc[0]
         clr = sub_df['pred_clr'].iloc[0]
@@ -608,7 +604,7 @@ def generate_model_forecast_plot(loc,  model, reset):
     )
     #sleep(0.0)
     
-    return figure
+    return [figure, generate_model_forecast_plot.fits_df.to_dict()]
 
             
         
@@ -893,8 +889,6 @@ def generate_rate_change_plot(loc,  model, reset):
 def generate_patient_census_plot(loc,  model, per_loc, per_admit, 
     per_cc, LOS_cc, LOS_nc, per_vent, TimeLag, reset):
     
-    global df_for_download
-    
     new_cases = []
     ForecastDays = 60
     
@@ -1023,7 +1017,7 @@ def generate_patient_census_plot(loc,  model, per_loc, per_admit,
     row_labels = fdates.tolist()  
         
     # Declare pandas dataframe to hold data for download
-    df_for_download = pd.DataFrame(columns = ['date'] + col_labels)
+    generate_patient_census_plot.df_for_download = pd.DataFrame(columns = ['date'] + col_labels)
     
     #### Construct arrays for critical care and non-critical care patients
     cc = (0.01 * per_cc) * (0.01 * per_admit) * (0.01 * per_loc) * np.array(ts_lag)
@@ -1108,11 +1102,11 @@ def generate_patient_census_plot(loc,  model, per_loc, per_admit,
         df_row.extend(cell)
         labs = ['date'] + col_labels
         temp = pd.DataFrame([df_row], columns=labs)
-        df_for_download = pd.concat([df_for_download, temp])
+        generate_patient_census_plot.df_for_download = pd.concat([generate_patient_census_plot.df_for_download, temp])
         # color the first row grey and remaining rows white
         
     
-    labels = list(df_for_download)
+    labels = list(generate_patient_census_plot.df_for_download)
     labels = labels[1:]
     fig_data = []
     
@@ -1126,9 +1120,9 @@ def generate_patient_census_plot(loc,  model, per_loc, per_admit,
         if label == 'date' or label == 'Total cases' or label == 'New cases':
             continue
         
-        dates = df_for_download['date'].tolist()
+        dates = generate_patient_census_plot.df_for_download['date'].tolist()
         clr = clrs[i]
-        obs_y = df_for_download[label].tolist()
+        obs_y = generate_patient_census_plot.df_for_download[label].tolist()
         
         fig_data.append(
             go.Scatter(
@@ -1493,6 +1487,8 @@ def generate_resource_availability_plot(loc,  model, icu_beds, nonicu_beds, vent
 app.layout = html.Div([
     dcc.Tabs([
         dcc.Tab(label='COVID Forecasts', children=[
+        
+        dcc.Store(id='memory-output'),
         # Banner
         html.Div(
             id="banner1",
@@ -1611,15 +1607,26 @@ app.layout = html.Div([
 
 
 
-@app.callback(
-    Output("model_forecasts_plot1", "figure"),
-    [
-        Input("location-select1", "value"),
-        Input("model-select1", "value"),
-        Input("reset-btn1", "n_clicks"),
-    ],
-)
+def generate_table(_dict, max_rows=10):
+    df = pd.DataFrame.from_dict(_dict)
+    return html.Table(
+        # Header
+        [html.Tr([html.Th(col) for col in df.columns])] +
+        # Body
+        [html.Tr([
+            html.Td(df.iloc[i][col]) for col in df.columns
+        ]) for i in range(min(len(df), max_rows))]
+    )
 
+
+
+@app.callback(
+    [Output("model_forecasts_plot1", "figure"),
+    Output("memory-output", "data")],
+    [Input("location-select1", "value"),
+     Input("model-select1", "value"),
+     Input("reset-btn1", "n_clicks")],
+)
 def update_model_forecast1(loc, model, reset_click):
     
     reset = False
@@ -1638,13 +1645,10 @@ def update_model_forecast1(loc, model, reset_click):
 
 @app.callback(
     Output("generate_rate_change_plot", "figure"),
-    [
-        Input("location-select2", "value"),
-        Input("model-select2", "value"),
-        Input("reset-btn2", "n_clicks"),
-    ],
+    [Input("location-select2", "value"),
+     Input("model-select2", "value"),
+     Input("reset-btn2", "n_clicks")],
 )
-
 def update_model_forecast2(loc, model, reset_click):
     
     reset = False
@@ -1740,26 +1744,30 @@ def update_resource_availability2(loc,  model, icu_beds, nonicu_beds, vents, per
 
 
 
-@app.callback(
-    Output('table1', 'children'))
-def update_table1():
-    
-    return generate_table(df_for_download)
+#@app.callback(
+#    Output('table1', 'children'),
+#    [Input("memory-output", "data")])
+#def update_table1(df_fits):
+#    return generate_table(df_fits)
 
 
 @app.callback(
     Output('download_xlsx1', 'href'),
-    [Input('field-dropdown1', 'value')])
-def update_download_link1(filter_value):
+    [Input("memory-output", "data")])
+def update_download_link1(value):
     return f'/export/excel'
+
 
 @app.server.route('/export/excel')
 def export_excel_file1():
-    option_df = df_for_download
+    option_df1 = generate_model_forecast_plot.fits_df
+    option_df2 = generate_patient_census_plot.df_for_download
     xlsx_io = io.BytesIO()
-    writer = pd.ExcelWriter(xlsx_io, engine='xlsxwriter')
-    option_df.to_excel(writer, sheet_name='scheme', index=False)
-    writer.save()
+    with pd.ExcelWriter(xlsx_io, engine='xlsxwriter') as writer:
+        
+        option_df1.to_excel(writer, sheet_name='COVID-19 Forecasts', index=False)
+        option_df2.to_excel(writer, sheet_name='Patient Census', index=False)
+        writer.save()
     xlsx_io.seek(0)
 
     return flask.send_file(
@@ -1772,35 +1780,31 @@ def export_excel_file1():
 
 
 
-@app.callback(
-    Output('table2', 'children'))
-def update_table2():
-    
-    return generate_table(df_for_download)
+
+#@app.callback(
+#    Output('download_xlsx2', 'href'),
+#    [Input("memory-output", "data")])
+#def update_download_link1(value):
+#    return f'/export/excel'
 
 
-@app.callback(
-    Output('download_xlsx2', 'href'),
-    [Input('field-dropdown2', 'value')])
-def update_download_link2(filter_value):
-    return f'/export/excel'
+#@app.server.route('/export/excel')
+#def export_excel_file1():
+#    option_df = generate_model_forecast_plot.fits_df
+#    xlsx_io = io.BytesIO()
+#    writer = pd.ExcelWriter(xlsx_io, engine='xlsxwriter')
+#    option_df.to_excel(writer, sheet_name='scheme', index=False)
+#    writer.save()
+#    xlsx_io.seek(0)
 
-@app.server.route('/export/excel')
-def export_excel_file2():
-    option_df = df_for_download
-    xlsx_io = io.BytesIO()
-    writer = pd.ExcelWriter(xlsx_io, engine='xlsxwriter')
-    option_df.to_excel(writer, sheet_name='scheme', index=False)
-    writer.save()
-    xlsx_io.seek(0)
+#    return flask.send_file(
+#        xlsx_io,
+#        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+#        attachment_filename=f'export.xlsx',
+#        as_attachment=True,
+#        cache_timeout=0
+#    )
 
-    return flask.send_file(
-        xlsx_io,
-        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        attachment_filename=f'export.xlsx',
-        as_attachment=True,
-        cache_timeout=0
-    )
 
 
 
