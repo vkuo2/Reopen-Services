@@ -1,12 +1,11 @@
 import pandas as pd # data frame library
 
-import time # library for time functionality
+import scipy as sc
 import datetime # library for date-time functionality
-from scipy.integrate import odeint
 import numpy as np # numerical python
 from scipy import stats # scientific python statistical package
 from scipy.optimize import curve_fit # optimization for fitting curves
-from math import pi
+
 
 
 #### FUNCTIONS FOR MODELING THE SPREAD OF COVID-19 CASES
@@ -24,7 +23,8 @@ def get_gaussian(obs_x, obs_y, ForecastDays):
     
     
     def gaussian(x, n, s, m):  
-        return n**2 * (1/(s*((2*pi)**0.5))) * np.exp(-0.5 * ((x - m)/s)**2)
+        #return n**2 * (1/(s*((2*pi)**0.5))) * np.exp(-0.5 * ((x - m)/s)**2)
+        return n**2 * 0.5 * (1 + sc.special.erf((x - m)/(s*2**0.5)))
 
 
     # obs_x: observed x values
@@ -312,8 +312,8 @@ def get_seir_sd(obs_x, obs_y, ForecastDays, N, iterations, SEIR_Fit, day):
         S = [1 - 1/sN] # fraction susceptible
         E = [1/sN] # fraction exposed
         I = [0] # fraction infected
+        cI = [0]
         R = [0] # fraction recovered
-        Q = [0] # fraction quarantined
         
         # declare a list that will hold testing-corrected
         # number of infections
@@ -341,7 +341,7 @@ def get_seir_sd(obs_x, obs_y, ForecastDays, N, iterations, SEIR_Fit, day):
             # No. infected at time t = I + alpha*E - gamma*I
             next_I = I[-1] + alpha * E[-1] - gamma * I[-1] 
             
-            next_Q = 0 #Q[-1] + s * alpha * E[-1] - gamma * Q[-1]
+            next_cI = cI[-1] + alpha * E[-1]
             
             # No. recovered at time t = R - gamma*I
             next_R = R[-1] + gamma*I[-1] #+ gamma*Q[-1]
@@ -351,7 +351,7 @@ def get_seir_sd(obs_x, obs_y, ForecastDays, N, iterations, SEIR_Fit, day):
             tE = next_E * sN
             tI = next_I * sN
             tR = next_R * sN
-            tQ = next_Q * sN
+            tcI = next_cI * sN
             
             sN = sN + im*sN
             tE = tE + im*sN
@@ -360,25 +360,25 @@ def get_seir_sd(obs_x, obs_y, ForecastDays, N, iterations, SEIR_Fit, day):
             next_E = tE/sN
             next_I = tI/sN
             next_R = tR/sN
-            next_Q = tQ/sN
+            next_cI = tcI/sN
             
             
             S.append(next_S)
             E.append(next_E)
             I.append(next_I)
             R.append(next_R)
-            Q.append(next_Q)
-            
+            cI.append(next_cI)
             
             # get the testing lag
             test_lag = test_effect(i)
             # get apparent infected by multiplying I by the testing lag
-            Ir.append(next_I * test_lag)
+            Ir.append(next_cI * test_lag)
         
         # multiply array of apparent percent infected by N
-        I = np.array(Ir) * sN + np.array(Q) * sN
+        I = np.array(Ir) * sN
         # convert I to a list
         I = I.tolist()
+        
         
         # number of observed days + size of forecast window
         num = len(obs_x)+fdays

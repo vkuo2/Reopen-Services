@@ -1,26 +1,22 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output, ClientsideFunction
+from dash.dependencies import Input, Output#, ClientsideFunction
 
 import numpy as np
 import pandas as pd
 from scipy.stats import binom, poisson # binomial and poisson distribution functions
 
 import datetime
-from datetime import datetime as dt
 import pathlib
 
 import plotly.graph_objects as go
-
-import datetime # library for date-time functionality
 import model_fxns as fxns
-from time import sleep
 
-import urllib.parse
+
 import flask
 import io
-import sys 
+#import sys 
 
 
 
@@ -59,7 +55,7 @@ DATA_PATH = BASE_PATH.joinpath("data").resolve()
 #try:
 #    seir_fits_df = pd.read_csv('https://raw.githubusercontent.com/Rush-Quality-Analytics/SupplyDemand/master/notebooks/data/SEIR-SD_States.txt', sep='\t')
 #except:
-seir_fits_df = pd.read_csv('data/SEIR-SD_States.txt', sep='\t')
+seir_fits_df = pd.read_csv('data/SEIR-SD_States_Update.txt', sep='\t')
 
 
 #try: 
@@ -88,7 +84,7 @@ locs_df.drop(columns=['Unnamed: 0'], inplace=True)
 locations = list(set(locs_df['Province/State']))
 locations.sort()
 
-models = ['Logistic', 'Gaussian', 'SEIR-SD', '3rd degree polynomial', 'Quadratic', 'Exponential']
+models = ['Logistic', 'Gaussian', 'SEIR-SD', 'Quadratic', 'Exponential']
 day_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 
             'Friday', 'Saturday','Sunday']
 
@@ -582,7 +578,7 @@ def generate_model_forecast_plot(loc,  model, reset):
             
             yaxis=dict(
                 title=dict(
-                    text="<b>Estimated active cases</b>",
+                    text="<b>Cumulative cases</b>",
                     font=dict(
                         family='"Open Sans", "HelveticaNeue", "Helvetica Neue",'
                         " Helvetica, Arial, sans-serif",

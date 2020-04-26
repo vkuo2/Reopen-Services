@@ -90,7 +90,7 @@ for focal_loc in states:
                                 model, ForecastDays, PopSize, ArrivalDate, j, iterations, SEIR_fit)
         
             
-        #print(obs_pred_r2)
+        print(obs_pred_r2)
         
         if obs_pred_r2 < 0:
             obs_pred_r2 = 0.0
@@ -124,5 +124,5 @@ for focal_loc in states:
                                                  DATES[-1]]
 
 
-model_fits_df.to_csv('SEIR-SD_States.txt', sep='\t')
+model_fits_df.to_csv('data/SEIR-SD_States.txt', sep='\t')
     
