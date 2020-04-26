@@ -15,14 +15,14 @@ ref_date = model_fits_df['reference_date'].iloc[-1]
 
 model = 'SEIR-SD'
 
-ap_df = pd.read_csv('COVID-CASES-DF.txt', sep='\t') 
+ap_df = pd.read_csv('data/COVID-CASES-DF.txt', sep='\t') 
 ap_df = ap_df[ap_df['Country/Region'] == 'US']
 ap_df = ap_df[ap_df['Province/State'] != 'US']
 ap_df = ap_df[ap_df['Province/State'] != 'American Samoa']
 ap_df = ap_df[ap_df['Province/State'] != 'Northern Mariana Islands']
 ap_df.drop(columns=['Unnamed: 0'], inplace=True)
 
-StatePops = pd.read_csv('StatePops.csv')
+StatePops = pd.read_csv('data/StatePops.csv')
 StatePops = StatePops[StatePops['Province/State'] != 'American Samoa']
 StatePops = StatePops[StatePops['Province/State'] != 'Northern Mariana Islands']
 

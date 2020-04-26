@@ -1,8 +1,4 @@
-# dash-clinical-analytics
-
-## About this app
-
-This dashboard allows you to explore clinic patient volume by time of the day, waiting time and care score. Drill down into high-volume days to view how the busy environment may have affected patient experience.
+# Reopen-Services
 
 ## Requirements
 
@@ -40,11 +36,6 @@ Run this app locally with:
 python app.py
 ```
 
-## Screenshot
-
-![screenshot](img/screencapture.png)
-
 ## Resources
 
 * [Dash](https://dash.plot.ly/)
-* Inspired by [Tableau template](https://www.tableau.com/solutions/workbook/improve-patient-satisfaction-improving-cycle-time).
